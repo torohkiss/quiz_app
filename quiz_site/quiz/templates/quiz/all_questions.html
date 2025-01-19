@@ -1,0 +1,30 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Questions{% endblock %}
+
+{% block content %}
+  <h2>Questions are as follows: </h2>
+  <form method='POST' action="{% url 'submit_answers' %}">
+	  {% csrf_token %}
+	  {% for question in questions %}
+	    <div>
+		  <strong>{{ question.text }}</strong>
+		  <ul>
+			  {% for choice in question.choices.all %}
+			    <li>
+				    <label>
+					    <input type="radio" name="question_{{ question.id }}" value="{{ choice.id }}">
+					    {{ choice.text }}
+				    </label>
+			    </li>
+			  {% empty %}
+			    <li>No options available.</li>
+			  {% endfor %}
+		  </ul>
+	    </div>
+	  {% empty %}
+	    <li>No questions available.</li>
+	  {% endfor %}
+	  <button type="submit">Submit Answers</button>
+  </form>
+{% endblock %}

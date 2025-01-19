@@ -1,0 +1,21 @@
+{% extends 'quiz/base.html' %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+  <h2>Results</h2>
+  <ul>
+	  {% for question_id, result in results.items %}
+	    <li>
+		    <strong>{{ result.question }}</strong><br>
+		    You selected: {{ result.selected }}<br>
+		    {% if result.is_correct %}
+		      <span style="color: green;">Correct!</span>
+		    {% else %}
+		      <span style="color: red;">Incorrect!</span>
+		    {% endif %}
+	    </li>
+	  {% endfor %}
+  </ul>
+  <a href="{% url 'all_questions' %}">Try Again</a>
+{% endblock %}
