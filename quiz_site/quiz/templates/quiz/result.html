@@ -1,8 +1,20 @@
-{% extends "base.html" %}
+{% extends "quiz/base.html" %}
 
 {% block title %}Results{% endblock %}
 
 {% block content %}
-  <h1>{{ result }}</h1>
-  <a href="/">Back to questions</a>
+  <h1>Results</h1>
+  <ul>
+	  {% for result in results %}
+	    <li>
+		    {{ result.question }}
+		      {% if result.is_correct %}
+		        Correct answer: {{ result.selected_choice }}
+		      {% else %}
+		        Wrong answer: {{ result.selected_choice }}
+		      {% endif %}
+	    </li>
+	  {% endfor %}
+  </ul>
+  <a href="{% url 'all_questions' %}">Back to Questions</a>
 {% endblock %}
