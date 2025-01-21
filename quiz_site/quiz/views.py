@@ -4,6 +4,9 @@ from .forms import QuestionForm
 
 # Create your views here.
 
+def quiz_home(request):
+    return render(request, 'quiz/quiz_home.html')
+
 def all(request):
     questions = Question.objects.all()
 
