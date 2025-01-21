@@ -16,5 +16,6 @@
 	    </li>
 	  {% endfor %}
   </ul>
+  <p>You scored {{ total_correct }} / {{ total_questions }}</p>
   <a href="{% url 'all_questions' %}">Back to Questions</a>
 {% endblock %}

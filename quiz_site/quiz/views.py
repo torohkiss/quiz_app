@@ -6,60 +6,44 @@ from .forms import QuestionForm
 
 def all(request):
     questions = Question.objects.all()
-    #questions = Question.objects.prefetch_related('choices').all()
-    results = []
 
-    if request.method == "POST":
-        for question in questions:
-            choice_id = request.POST.get(f'question_{question.id}')
-            if choice_id:
+    if request.method == 'POST':
+        form = QuestionForm(request.POST)
+        if form.is_valid():
+            results = []
+            total_correct = 0
+
+            for field_name, choice_id in form.cleaned_data.items():
+                question_id = int(field_name.split('_')[1])
+                question = Question.objects.get(id=question_id)
                 choice = Choice.objects.get(id=choice_id)
                 is_correct = choice.correct_answer
+
+                if is_correct:
+                    total_correct += 1
+
                 results.append({
-                    'question': question.text,
+                    'question': question,
                     'selected_choice': choice.text,
-                    'is_correct': is_correct,
+                    'is_correct': is_correct
                 })
-        return render(request, 'quiz/result.html', {'results': results})
+            return render(
+                    request,
+                    'quiz/result.html',
+                    {
+                        'results': results,
+                        'total_correct': total_correct,
+                        'total_questions': questions.count(),
+                    }
+                )
+    else:
+        form = QuestionForm()
+
     return render(
             request,
             'quiz/all_questions.html',
             {
+                'form': form,
                 'questions': questions,
             }
         )
-
-def submit_answers(request):
-    if request.method == 'POST':
-        results = []
-        for question in Question.objects.all():
-            selected_choice_id = request.POST.get(f'question_{question.id}')
-
-            if selected_choice_id:
-                 selected_choice = Choice.objects.get(id=selected_choice_id)
-
-                 results.append({
-                    'question': question.text,
-                    'selected_choice': selected_choice.text,
-                    'is_correct': selected_choice.correct_answer
-                })
-        return render(request, 'quiz/result.html', {'results': results})
-    return redirect('all_questions')
-
-"""def question_view(request, question_id):
-    question = get_object_or_404(Question, id=question_id)
-
-    if request.method == 'POST':
-        form = QuestionForm(request.POST, question=question)
-        if form.is_valid():
-            choice_id = form.cleaned_data['choices']
-            choice = Choice.objects.get(id=choice_id)
-            if choice.correct_answer:
-                return render(request, 'quiz/result.html', {'result': 'Correct answer!'})
-            else:
-                return render(request, 'quiz/result.html', {'result': 'Wrong answer!'})
-
-    else:
-        form = QuestionForm(question=question)
-
-    return render(request, 'quiz/question.html', {'form': form, 'question': question})"""
