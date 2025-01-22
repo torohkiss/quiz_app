@@ -1,0 +1,12 @@
+{% extends "quiz/base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+  <h1>Dashboard</h1>
+  <p>Welcome to your dashboard.</p>
+
+  <p>Lets continue to our quiz site 
+  	<a href="{% url 'all_questions' %}">Gooo</a>
+  </p>
+{% endblock %}

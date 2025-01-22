@@ -6,6 +6,10 @@
   <h1>How ready are you to test your skills? </h1>
 
   <h3>On your marks, set? 
-	  <a href="{% url 'all_questions' %}">GOOO</a>
+	  {% if user.is_authenticated %}
+	    <a href="{% url 'all_questions' %}">GOOO</a>
+	  {% else %}
+	    <a href="{% url 'login' %}">Login to Start</a>
+	  {% endif %}
   </h3>
 {% endblock %}

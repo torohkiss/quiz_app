@@ -1,15 +1,6 @@
 from django import forms
 from .models import Question, Choice
 
-"""class QuestionForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        question = kwargs.pop('question')
-        super().__init__(*args, **kwargs)
-        self.fields['choices'] = forms.ChoiceField(
-            label=question.text,
-            choices=[(choice.id, choice.text) for choice in question.choices.all()],
-            widget=forms.RadioSelect,
-        )"""
 
 
 class QuestionForm(forms.Form):
@@ -27,3 +18,7 @@ class QuestionForm(forms.Form):
                     widget=forms.RadioSelect,
                     required=True
                 )
+
+class LoginForm(forms.Form):
+    username = forms.CharField()
+    password = forms.CharField(widget=forms.PasswordInput)

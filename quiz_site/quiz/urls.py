@@ -1,9 +1,13 @@
+from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views
 
 urlpatterns = [
-        path('', views.quiz_home, name='quiz_home'),
+        #path('', views.quiz_home, name='quiz_home'),
+        path('', views.dashboard, name='dashboard'),
+        path('quiz_home', views.quiz_home, name='quiz_home'),
+        path('login/', auth_views.LoginView.as_view(), name='login'),
+        path('logout/', auth_views.LogoutView.as_view(), name='logout'),
+        #path('login/', views.user_login, name='login'),
         path('all/', views.all, name='all_questions'),
-        #path('question/<int:question_id>/', views.question_view, name='question'),
-        #path('submit/', views.submit_answers, name='submit_answers'),
     ]
