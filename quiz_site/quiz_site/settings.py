@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'quiz.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'quiz_site.urls'
@@ -127,3 +128,8 @@ LOGIN_REDIRECT_URL = 'dashboard'
 #LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
+
+# Session settings
+SESSION_COOKIE_AGE = 300  # 5 minutes in seconds
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Session expires when browser closes
+SESSION_SAVE_EVERY_REQUEST = True  # Update session on every request

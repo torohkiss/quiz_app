@@ -3,6 +3,7 @@
 {% block title %}All Questions{% endblock %}
 
 {% block content %}
+
   <h2>Questions are as follows: </h2>
   <form method='POST' action="{% url 'all_questions' %}">
 	  {% csrf_token %}

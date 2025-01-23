@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question, Choice
 from .forms import QuestionForm, LoginForm
+from django.utils import timezone
 
 # Create your views here.
 
@@ -42,7 +43,11 @@ def dashboard(request):
 def quiz_home(request):
     return render(request, 'quiz/quiz_home.html')
 
+@login_required
 def all(request):
+    request.session['last_activity'] = timezone.now().isoformat()
+
+
     questions = Question.objects.all()
 
     if request.method == 'POST':
@@ -65,6 +70,7 @@ def all(request):
                     'selected_choice': choice.text,
                     'is_correct': is_correct
                 })
+
             return render(
                     request,
                     'quiz/result.html',
