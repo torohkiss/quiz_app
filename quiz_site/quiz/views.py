@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question, Choice, UserScore
-from .forms import QuestionForm, LoginForm
+from .forms import QuestionForm, LoginForm, UserRegistrationForm
 from django.utils import timezone
 from django.contrib import messages
 
@@ -105,3 +105,28 @@ def quiz_results(request):
     )
 
     return render(request, 'quiz/results.html', {'results': results})
+
+def register(request):
+    if request.method == 'POST':
+        user_form = UserRegistrationForm(request.POST)
+        if user_form.is_valid():
+            # Create a new user object but avoid saving it yet
+            new_user = user_form.save(commit=False)
+            new_user.set_password(
+                user_form.cleaned_data['password']
+            )
+        # Save the User object
+        new_user.save()
+
+        return render(
+            request,
+            'quiz/register_done.html',
+            {'new_user': new_user}
+        )
+    else:
+        user_form = UserRegistrationForm()
+        return render(
+            request,
+            'quiz/register.html',
+            {'user_form': user_form}
+        )
