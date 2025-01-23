@@ -2,46 +2,39 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Question, Choice
+from .models import Question, Choice, UserScore
 from .forms import QuestionForm, LoginForm
 from django.utils import timezone
+from django.contrib import messages
 
 # Create your views here.
 
 @login_required
 def dashboard(request):
+    user_scores = UserScore.objects.filter(user=request.user).order_by('-timestamp')[:5]
+
     return render(
         request,
         'quiz/dashboard.html',
-        {'section': 'dashboard'}
+        {
+            'section': 'dashboard',
+            'user_scores': user_scores,
+            'current_time': timezone.now().strftime('%Y-%m-%d %H:%M:%S'),
+            'username': request.user.username,
+        }
     )
 
-"""def user_login(request):
+@login_required
+def reset_scores(request):
     if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(
-                    request,
-                    username=cd['username'],
-                    password=cd['password'],
-                )
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponse('Authenticated successfully')
-                else:
-                    return HttpResponse('Disabled account')
-            else:
-                return HttpResponse('Invalid login')
-    else:
-        form = LoginForm()
-    return render(request, 'quiz/login.html', {'form': form})"""
+        UserScore.objects.filter(user=request.user).delete()
+        messages.success(request, 'Your scores have been reset successfully!')
+    return redirect('dashboard')
 
-
-
+@login_required
 def quiz_home(request):
     return render(request, 'quiz/quiz_home.html')
+
 
 @login_required
 def all(request):
@@ -71,6 +64,12 @@ def all(request):
                     'is_correct': is_correct
                 })
 
+            UserScore.objects.create(
+                    user=request.user,
+                    score=total_correct,
+                    total_questions=questions.count()
+                )
+
             return render(
                     request,
                     'quiz/result.html',
@@ -91,3 +90,18 @@ def all(request):
                 'questions': questions,
             }
         )
+
+@login_required
+def quiz_results(request):
+    results = request.session.get('quiz_results', {})
+
+    # Calculate the total correct answers
+    correct_count = sum(1 for result in results.values() if result['is_correct'])
+
+    # Save the score
+    UserScore.objects.create(
+        user=request.user,
+        score=correct_count
+    )
+
+    return render(request, 'quiz/results.html', {'results': results})
