@@ -3,13 +3,37 @@
 {% block title %}Quiz Home{% endblock %}
 
 {% block content %}
-  <h1>How ready are you to test your skills? </h1>
+<div class="quiz-home">
+    <div class="user-info">
+        <div>{{ current_time }}</div>
+        <div>User: {{ user.username|default:"Guest" }}</div>
+    </div>
 
-  <h3>On your marks, set? 
-	  {% if user.is_authenticated %}
-	    <a href="{% url 'all_questions' %}">GOOO</a>
-	  {% else %}
-	    <a href="{% url 'login' %}">Login to Start</a>
-	  {% endif %}
-  </h3>
+    <h1 class="main-heading">How ready are you to test your skills?</h1>
+
+    <div class="start-section">
+        <h3 class="action-text">On your marks, set?</h3>
+        {% if user.is_authenticated %}
+            <a href="{% url 'all_questions' %}" class="action-button pulse">GOOO!</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="action-button login-button">Login to Start</a>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}
+
+{% comment %} {% extends "quiz/base.html" %}
+
+{% block title %}Quiz Home{% endblock %}
+
+{% block content %}
+<h1>How ready are you to test your skills? </h1>
+
+<h3>On your marks, set? 
+	{% if user.is_authenticated %}
+	<a href="{% url 'all_questions' %}">GOOO</a>
+	{% else %}
+	<a href="{% url 'login' %}">Login to Start</a>
+	{% endif %}
+</h3>
+{% endblock %} {% endcomment %}

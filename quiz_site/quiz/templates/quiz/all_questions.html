@@ -3,12 +3,49 @@
 {% block title %}All Questions{% endblock %}
 
 {% block content %}
-
-  <h2>Questions are as follows: </h2>
-  <form method='POST' action="{% url 'all_questions' %}">
-	  {% csrf_token %}
-	  {{ form.as_p }}
-	  <button type="submit">Submit Answers</button>
-  </form>
-  <p>You can check your <a href="{% url 'dashboard' %}">Dashboard</a> to see how you are doing!
+  <div class="allquestions">
+    <h2 class="quiz-title">Questions are as follows: </h2>
+    <form method='POST' action="{% url 'all_questions' %}" class="quiz-form">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="question-container">
+          <p class="question-text">{{ field.label }}</p>
+          <div class="options-container">
+            {{ field }}
+          </div>
+        </div>
+      {% endfor %}
+      <button type="submit" class="submit-button">Submit Answers</button>
+    </form>
+    <p id="todashboard" class="dashboard-link">
+      You can check your <a href="{% url 'dashboard' %}">Dashboard</a> to see how you are doing!
+    </p>
+  </div>
 {% endblock %}
+
+
+
+{% comment %} {% extends "quiz/base.html" %}
+
+{% block title %}All Questions{% endblock %}
+
+{% block content %}
+
+  <div class="allquestions">
+    <h2>Questions are as follows: </h2>
+    <form method='POST' action="{% url 'all_questions' %}" class="quiz_form">
+      {% csrf_token %}
+      {{ form.as_p }}
+      {% for field in form %}
+        <div class="question-container">
+          <p class="question-text">{{ field.label }}</p>
+          <div class="options-container">
+            {{ field }}
+          </div>
+        </div>
+      {% endfor %}
+      <button type="submit" class="submit-button">Submit Answers</button>
+    </form>
+    <p id="todashboard" class="dashboard-link">You can check your <a href="{% url 'dashboard' %}">Dashboard</a> to see how you are doing!
+  </div>
+{% endblock %} {% endcomment %}

@@ -3,22 +3,25 @@
 <html>
 <head>
 	<title>{% block title %}{% endblock %}</title>
-	<link href="{% static "css/base.css" %}" rel="stylesheet">
+	<link href="{% static 'css/base.css' %}" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 	{% if user.is_authenticated %}
 	<script>
 		let timeLeft = {{ request.session.session_cookie_age|default:90 }};
 		function updateTimer() {
-		  const minutes = Math.floor(timeLeft / 60);
-		  const seconds = timeLeft % 60;
-		  document.getElementById('timer').textContent =
+			const minutes = Math.floor(timeLeft / 60);
+			const seconds = timeLeft % 60;
+			document.getElementById('timer').textContent =
 			`Session expires in: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-
-		  if (timeLeft <= 0) {
-		    window.location.href = "{% url 'logout' %}";
-		  } else {
-		    timeLeft--;
-		    setTimeout(updateTimer, 1000);
-		  }
+			
+			if (timeLeft <= 0) {
+				window.location.href = "{% url 'logout' %}";
+			} else {
+				timeLeft--;
+				setTimeout(updateTimer, 1000);
+			}
 		}
 
 		window.onload = function() {
@@ -28,26 +31,23 @@
 	{% endif %}
 </head>
 <body>
-  <div>
-    <span>Test your skills</span>
-    <span>
-	    {% if request.user.is_authenticated %}
-	      Hello {{ request.user.first_name|default:request.user.username }},
-	      <form action="{% url "logout" %}" method="post">
-		      <button type="submit">Logout</button>
-		      {% csrf_token %}
-	      </form>
-	    {% else %}
-	      <a href="{% url "login" %}">Log-in</a>
-	    {% endif %}
+	<div id='header'>
+    <span class="logo">Test your skills</span>
+    <span class="user">
+		{% if request.user.is_authenticated %}
+		Hello {{ request.user.first_name|default:request.user.username }},
+		<form action="{% url 'logout' %}" method="post">
+			<button type="submit">Logout</button>
+			{% csrf_token %}
+		</form>
+		{% else %}
+		<a href="{% url 'login' %}">Log-in</a>
+		{% endif %}
     </span>
-  </div>
-  <div>
-	  {% block content %}
-	  {% endblock %}
-  </div>
+</div>
+<div id="content">
+	{% block content %}
+	{% endblock %}
+</div>
 </body>
 </html>
-          
-			 
-

@@ -20,8 +20,20 @@ class QuestionForm(forms.Form):
                 )
 
 class LoginForm(forms.Form):
-    username = forms.CharField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'autocomplete': 'username',
+            'id': 'id_username',
+            'class': 'form-control'
+        })
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={
+            'autocomplete': 'current-password',
+            'id': 'id_password',
+            'class': 'form-control'
+        })
+    )
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(

@@ -3,11 +3,44 @@
 {% block title %}Create an account{% endblock %}
 
 {% block content %}
+  <div class="registration-container">
+    
+    <h1>Create an account</h1>
+    <p>Please, sign up using the following form:</p>
+    
+    <form method="post" class="registration-form">
+      {% csrf_token %}
+      {% for field in user_form %}
+        <div class="form-field">
+          {{ field.label_tag }}
+          {{ field }}
+          {% if field.help_text %}
+            <span class="helptext">{{ field.help_text }}</span>
+          {% endif %}
+          {% if field.errors %}
+            <ul class="errorlist">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+      <input type="submit" value="Create my account">
+    </form>
+  </div>
+{% endblock %}
+
+{% comment %} {% extends "quiz/base.html" %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
   <h1>Create an account</h1>
   <p>Please, sign up using the following form:</p>
   <form method="post">
-	  {{ user_form.as_p }}
-	  {% csrf_token %}
-	  <p><input type="submit" value="Create my account"></p>
+    {{ user_form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Create my account"></p>
   </form>
-{% endblock %}
+{% endblock %} {% endcomment %}

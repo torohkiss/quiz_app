@@ -3,19 +3,56 @@
 {% block title %}Results{% endblock %}
 
 {% block content %}
-  <h1>Results</h1>
-  <ul>
-	  {% for result in results %}
-	    <li>
-		    {{ result.question }}
-		      {% if result.is_correct %}
-		        Correct answer: {{ result.selected_choice }}
-		      {% else %}
-		        Wrong answer: {{ result.selected_choice }}
-		      {% endif %}
-	    </li>
-	  {% endfor %}
-  </ul>
-  <p>You scored {{ total_correct }} / {{ total_questions }}</p>
-  <a href="{% url 'all_questions' %}">Back to Questions</a>
+<div class="results-container">
+    <div class="user-info-banner">
+        <div>{{ current_time }}</div>
+        <div>User: {{ user.username }}</div>
+    </div>
+
+    <h1 class="results-title">Quiz Results</h1>
+
+    <ul class="results-list">
+        {% for result in results %}
+        <li class="result-item {% if result.is_correct %}result-correct{% else %}result-wrong{% endif %}">
+            <div class="question-text">{{ result.question }}</div>
+            <div class="answer-text">
+                {% if result.is_correct %}
+                    <span class="icon">✓</span> Correct answer: {{ result.selected_choice }}
+                {% else %}
+                    <span class="icon">✗</span> Wrong answer: {{ result.selected_choice }}
+                {% endif %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <div class="score-display">
+        Final Score: {{ total_correct }} / {{ total_questions }}
+    </div>
+
+    <a href="{% url 'all_questions' %}" class="back-button">Back to Questions</a>
+</div>
 {% endblock %}
+
+
+{% comment %} {% extends "quiz/base.html" %}
+
+{% block title %}Results{% endblock %}
+
+{% block content %}
+<h1>Results</h1>
+<ul>
+	{% for result in results %}
+	<li>
+		{{ result.question }}
+		{% if result.is_correct %}
+		Correct answer: {{ result.selected_choice }}
+		{% else %}
+		Wrong answer: {{ result.selected_choice }}
+		{% endif %}
+	</li>
+	{% endfor %}
+</ul>
+<p>You scored {{ total_correct }} / {{ total_questions }}</p>
+<a href="{% url 'all_questions' %}">Back to Questions</a>
+{% endblock %} {% endcomment %}
