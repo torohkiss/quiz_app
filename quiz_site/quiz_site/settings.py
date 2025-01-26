@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from decouple import config
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+SECRET_KEY = os.getenv('SECRET_KEY', 'default-secret-key')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,12 +27,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_dy8uy3gp_^yz%ki)%idnl&7ms!dnghf((gjseagg&0*!0$#7l'
+# SECRET_KEY = 'django-insecure-_dy8uy3gp_^yz%ki)%idnl&7ms!dnghf((gjseagg&0*!0$#7l'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY') if 'SECRET_KEY' in os.environ else config('SECRET_KEY')
+DEBUG = os.getenv('DEBUG') == 'True' if 'DEBUG' in os.environ else config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+
+
+# SECURITY WARNING: don't run with debug turned on in production!i
+
+
+
+DEBUG = False
+
+ALLOWED_HOSTS = ['*']
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_build", "static")
+# STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 
 # Application definition
@@ -42,6 +62,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -50,6 +71,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'quiz.middleware.SessionTimeoutMiddleware',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 ROOT_URLCONF = 'quiz_site.urls'
 
@@ -70,6 +94,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'quiz_site.wsgi.application'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Database
